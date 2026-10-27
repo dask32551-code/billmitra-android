@@ -1,0 +1,39 @@
+name: Build Billmitra APK
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip project
+        run: unzip -q Billmitra-android.zip -d proj
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          build-root-directory: proj
+      - name: Build debug APK
+        working-directory: proj
+        run: |
+          set -o pipefail
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
+      - name: Show compile errors
+        if: failure()
+        working-directory: proj
+        run: grep -nE "^e: |error:|FAILED|What went wrong" -A3 build.log | head -80 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Billmitra-apk
+          path: |
+            proj/app/build/outputs/apk/debug/app-debug.apk
+            proj/build.log
