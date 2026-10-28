@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Unzip project
-        run: unzip -q Billmitra-android-vivo-y21-v6.zip -d proj
+        run: unzip -q Billmitra-android-vivo-y21-v8.zip -d proj
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -22,11 +22,4 @@ jobs:
         run: |
           set -o pipefail
           chmod +x ./gradlew
-          ./gradlew assembleRelease --stacktrace 2>&1 | tee build.log
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: Billmitra-apk
-          path: |
-            proj/app/build/outputs/apk/release/app-release.apk
-            proj/build.log
+          ./gra
