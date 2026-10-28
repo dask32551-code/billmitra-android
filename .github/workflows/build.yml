@@ -10,23 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Unzip project
-        run: unzip -q Billmitra-android-vivo-y21.zip -d proj
+        run: unzip -q Billmitra-android-vivo-y21-v4.zip -d proj
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
       - name: Accept Android licenses
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
-      - name: Build debug APK
+      - name: Build release APK
         working-directory: proj
         run: |
           set -o pipefail
           chmod +x ./gradlew
-          ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
+          ./gradlew assembleRelease --stacktrace 2>&1 | tee build.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Billmitra-apk
           path: |
-            proj/app/build/outputs/apk/debug/app-debug.apk
+            proj/app/build/outputs/apk/release/app-release.apk
             proj/build.log
