@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Unzip project
-        run: unzip -q Billmitra-android.zip -d proj
+        run: unzip -q Billmitra-android-vivo-y21.zip -d proj
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
